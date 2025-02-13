@@ -1,0 +1,221 @@
+{
+    "nodes": [
+        {
+            "nodeId": "a866128d-9f8c-49e5-a438-0fa43973d18b",
+            "action": 0,
+            "prompt": "我可以回答各种问题，欢迎提问",
+            "welcomeType": 1,
+            "envs": [],
+            "varInitValues": {
+                "currentFile": "",
+                "content": "",
+                "currentImage": ""
+            },
+            "appearance": {
+                "startPoint": "{\"x\":-1170,\"y\":-320}",
+                "textPoint": "{\"x\":-1170,\"y\":-320}"
+            }
+        },
+        {
+            "nodeId": "7c778dcc-be8c-479b-8780-792e4de56872",
+            "action": 2,
+            "prompt": "回答用户的问题。\n\n如果以下文件内容不为“N/A”，则可能是用户发送的文件的内容，或者是用户发送的图片的描述。\n\n文件内容\n---------\n{{content}}",
+            "llmModel": "deepseek-r1",
+            "outputVariableName": "",
+            "feedbackMessage": "Deepseek-r1 正在回答",
+            "appearance": {
+                "startPoint": "{\"x\":160,\"y\":-10}",
+                "textPoint": "{\"x\":160,\"y\":-10}"
+            }
+        },
+        {
+            "nodeId": "ba1ca182-bc36-4648-a49b-7f7a27a1ed0e",
+            "action": 4,
+            "judgeType": 1,
+            "lang": "js",
+            "prompt": "const newFile = `{{sys.fileUrl}}`;\nconst oldFile = `{{currentFile}}`;\n\nconst shouldRead = newFile && newFile !== oldFile;\n\nreturn shouldRead;\n",
+            "appearance": {
+                "startPoint": "{\"x\":-370,\"y\":-10}",
+                "textPoint": "{\"x\":-370,\"y\":-10}"
+            }
+        },
+        {
+            "nodeId": "033ade25-8a29-451b-bb93-1cc07dd38c01",
+            "action": 100,
+            "outputVariableName": "currentFile",
+            "prompt": "{{sys.fileUrl}}",
+            "provideType": 1,
+            "appearance": {
+                "startPoint": "{\"x\":-60,\"y\":-340}",
+                "textPoint": "{\"x\":-60,\"y\":-340}"
+            }
+        },
+        {
+            "nodeId": "9b183c69-3c0b-454a-b442-2061ae2b7e94",
+            "action": 6,
+            "lang": "python",
+            "codeMethod": 1,
+            "prompt": "给定以下文件链接，下载并读取文件内容。\n\n{{sys.fileUrl}}\n\n程序需要输出完整的文件内容",
+            "outputVariableName": "content",
+            "feedbackMessage": "正在读取文件内容",
+            "appearance": {
+                "startPoint": "{\"x\":300,\"y\":-340}",
+                "textPoint": "{\"x\":300,\"y\":-340}"
+            }
+        },
+        {
+            "nodeId": "f7a4d2da-b1ae-4de2-8aa9-c37efd16b199",
+            "action": 100,
+            "llmModel": "qwen-vl-plus",
+            "prompt": "详细描述用户发送的最后一张图片",
+            "includeHistory": true,
+            "outputVariableName": "content",
+            "appearance": {
+                "startPoint": "{\"x\":360,\"y\":-620}",
+                "textPoint": "{\"x\":360,\"y\":-620}"
+            }
+        },
+        {
+            "nodeId": "00ce0323-b18d-4211-94a5-42e05e2b15b1",
+            "action": 4,
+            "prompt": "const newFile = `{{sys.imageUrl}}`;\nconst oldFile = `{{currentImage}}`;\n\nconst shouldRead = newFile !== `N/A` && newFile !== oldFile;\n\nreturn shouldRead;\n",
+            "judgeType": 1,
+            "lang": "js",
+            "appearance": {
+                "startPoint": "{\"x\":-730,\"y\":-320}",
+                "textPoint": "{\"x\":-730,\"y\":-320}"
+            }
+        },
+        {
+            "nodeId": "9e21a561-7ca6-4ebe-9469-c026c4a9c87d",
+            "action": 100,
+            "provideType": 1,
+            "prompt": "{{sys.imageUrl}}",
+            "outputVariableName": "currentImage",
+            "appearance": {
+                "startPoint": "{\"x\":-290,\"y\":-620}",
+                "textPoint": "{\"x\":-290,\"y\":-620}"
+            }
+        }
+    ],
+    "edges": [
+        {
+            "edgeId": "dabcae08-f9fc-49d3-b683-803f11e571ae",
+            "sourceNodeId": "ba1ca182-bc36-4648-a49b-7f7a27a1ed0e",
+            "targetNodeId": "033ade25-8a29-451b-bb93-1cc07dd38c01",
+            "condition": "true",
+            "type": "judge-link",
+            "appearance": {
+                "startPoint": "{\"x\":-220,\"y\":-10}",
+                "endPoint": "{\"x\":-210,\"y\":-340}",
+                "textPoint": "{\"x\":-215,\"y\":-175}",
+                "pointsList": "[{\"x\":-220,\"y\":-10},{\"x\":-120,\"y\":-10},{\"x\":-310,\"y\":-340},{\"x\":-210,\"y\":-340}]"
+            }
+        },
+        {
+            "edgeId": "c4960da7-a7c7-45a3-9866-2f0b9474e6d2",
+            "sourceNodeId": "ba1ca182-bc36-4648-a49b-7f7a27a1ed0e",
+            "targetNodeId": "7c778dcc-be8c-479b-8780-792e4de56872",
+            "condition": "false",
+            "type": "judge-link",
+            "appearance": {
+                "startPoint": "{\"x\":-220,\"y\":-10}",
+                "endPoint": "{\"x\":10,\"y\":-10}",
+                "textPoint": "{\"x\":-105,\"y\":-10}",
+                "pointsList": "[{\"x\":-220,\"y\":-10},{\"x\":-120,\"y\":-10},{\"x\":-90,\"y\":-10},{\"x\":10,\"y\":-10}]"
+            }
+        },
+        {
+            "edgeId": "9f01362c-cc26-42a3-a9b7-3907cddb112d",
+            "sourceNodeId": "9b183c69-3c0b-454a-b442-2061ae2b7e94",
+            "targetNodeId": "7c778dcc-be8c-479b-8780-792e4de56872",
+            "type": "flow-link",
+            "appearance": {
+                "startPoint": "{\"x\":450,\"y\":-340}",
+                "endPoint": "{\"x\":310,\"y\":-10}",
+                "pointsList": "[{\"x\":450,\"y\":-340},{\"x\":550,\"y\":-340},{\"x\":410,\"y\":-10},{\"x\":310,\"y\":-10}]"
+            }
+        },
+        {
+            "edgeId": "46be773d-c1b9-40e1-b9e4-15afeb74547d",
+            "sourceNodeId": "f7a4d2da-b1ae-4de2-8aa9-c37efd16b199",
+            "targetNodeId": "7c778dcc-be8c-479b-8780-792e4de56872",
+            "type": "flow-link",
+            "appearance": {
+                "startPoint": "{\"x\":510,\"y\":-620}",
+                "endPoint": "{\"x\":310,\"y\":-10}",
+                "pointsList": "[{\"x\":510,\"y\":-620},{\"x\":883,\"y\":-602.5},{\"x\":410,\"y\":-10},{\"x\":310,\"y\":-10}]"
+            }
+        },
+        {
+            "edgeId": "ab2d568d-19d1-4ce5-8b4f-1f884765ea4e",
+            "sourceNodeId": "033ade25-8a29-451b-bb93-1cc07dd38c01",
+            "targetNodeId": "9b183c69-3c0b-454a-b442-2061ae2b7e94",
+            "type": "flow-link",
+            "appearance": {
+                "startPoint": "{\"x\":90,\"y\":-340}",
+                "endPoint": "{\"x\":150,\"y\":-340}",
+                "pointsList": "[{\"x\":90,\"y\":-340},{\"x\":190,\"y\":-340},{\"x\":50,\"y\":-340},{\"x\":150,\"y\":-340}]"
+            }
+        },
+        {
+            "edgeId": "21e16320-f58c-468a-bbc2-15789230e8e5",
+            "sourceNodeId": "a866128d-9f8c-49e5-a438-0fa43973d18b",
+            "targetNodeId": "00ce0323-b18d-4211-94a5-42e05e2b15b1",
+            "type": "flow-link",
+            "appearance": {
+                "startPoint": "{\"x\":-1020,\"y\":-320}",
+                "endPoint": "{\"x\":-880,\"y\":-320}",
+                "pointsList": "[{\"x\":-1020,\"y\":-320},{\"x\":-920,\"y\":-320},{\"x\":-980,\"y\":-320},{\"x\":-880,\"y\":-320}]"
+            }
+        },
+        {
+            "edgeId": "00919f45-f7a0-4d4e-bf03-9b8ad122cc23",
+            "sourceNodeId": "00ce0323-b18d-4211-94a5-42e05e2b15b1",
+            "targetNodeId": "ba1ca182-bc36-4648-a49b-7f7a27a1ed0e",
+            "condition": "false",
+            "type": "judge-link",
+            "appearance": {
+                "startPoint": "{\"x\":-580,\"y\":-320}",
+                "endPoint": "{\"x\":-520,\"y\":-10}",
+                "textPoint": "{\"x\":-550,\"y\":-165}",
+                "pointsList": "[{\"x\":-580,\"y\":-320},{\"x\":-480,\"y\":-320},{\"x\":-620,\"y\":-10},{\"x\":-520,\"y\":-10}]"
+            }
+        },
+        {
+            "edgeId": "da21cd22-f998-409e-ab49-a4238cb2fdbe",
+            "sourceNodeId": "00ce0323-b18d-4211-94a5-42e05e2b15b1",
+            "targetNodeId": "9e21a561-7ca6-4ebe-9469-c026c4a9c87d",
+            "condition": "true",
+            "type": "judge-link",
+            "appearance": {
+                "startPoint": "{\"x\":-580,\"y\":-320}",
+                "endPoint": "{\"x\":-440,\"y\":-620}",
+                "textPoint": "{\"x\":-510,\"y\":-470}",
+                "pointsList": "[{\"x\":-580,\"y\":-320},{\"x\":-480,\"y\":-320},{\"x\":-540,\"y\":-620},{\"x\":-440,\"y\":-620}]"
+            }
+        },
+        {
+            "edgeId": "d7bbabc2-5bf8-443f-8a2c-e6465866aeb7",
+            "sourceNodeId": "9e21a561-7ca6-4ebe-9469-c026c4a9c87d",
+            "targetNodeId": "f7a4d2da-b1ae-4de2-8aa9-c37efd16b199",
+            "type": "flow-link",
+            "appearance": {
+                "startPoint": "{\"x\":-140,\"y\":-620}",
+                "endPoint": "{\"x\":210,\"y\":-620}",
+                "pointsList": "[{\"x\":-140,\"y\":-620},{\"x\":-40,\"y\":-620},{\"x\":110,\"y\":-620},{\"x\":210,\"y\":-620}]"
+            }
+        },
+        {
+            "edgeId": "64656aea-8b4c-4644-b5f4-6f49ebeda160",
+            "sourceNodeId": "7c778dcc-be8c-479b-8780-792e4de56872",
+            "targetNodeId": "00ce0323-b18d-4211-94a5-42e05e2b15b1",
+            "type": "flow-link",
+            "appearance": {
+                "startPoint": "{\"x\":310,\"y\":-10}",
+                "endPoint": "{\"x\":-880,\"y\":-320}",
+                "pointsList": "[{\"x\":310,\"y\":-10},{\"x\":330,\"y\":369.50000000000034},{\"x\":-1100,\"y\":160.50000000000034},{\"x\":-880,\"y\":-320}]"
+            }
+        }
+    ]
+}
